@@ -9,7 +9,7 @@ def diccionario(cadena):
                 frecuencias[letra] += 1
             else:
                 frecuencias[letra] = 1
-    print (frecuencias)
+    return frecuencias
 
 cadena = "cadena de caracteres de prueba"    
 diccionario(cadena)
@@ -72,7 +72,9 @@ print (estado_clase)
 #6. Escribe una función que calcule el factorial de un número de manera recursiva.
 
 def factorial(num):
-    if num == 1 or num == 0:
+    if num < 0:
+        return "El factoral no está definido para números negativos"
+    elif num == 1 or num == 0:
         return 1
     return num * factorial(num-1)
 
@@ -264,9 +266,11 @@ print(reduce(lambda x, y: x +' '+ y, palabras))
 
 # %%
 #24. Calcula la diferencia total en los valores de una lista. Usa la función reduce()
+from functools import reduce
 
 numeros = [4, 15, 9, 2, 20]
-print (reduce(lambda acumulado, y: acumulado + abs(numeros[y]-numeros[y-1]), range(1, len(numeros)), 0))
+diferencia_total = reduce(lambda acumulado, y: acumulado + abs(y-acumulado), numeros, 0)
+print(diferencia_total)
 
 # %%
 #25. Crea una función que cuente el número de caracteres en una cadena de texto dada.
@@ -350,6 +354,11 @@ def anagrama(palabra_1, palabra_2):
                 return "No son anagramas"
         return "Si que son anagramas"
 
+#Código corregido
+def son_anagramas(palabra_1, palabra_2):
+    return sorted(palabra_1.lower()) == sorted(palabra_2.lower())
+
+
 palabra_1 = "amargana"
 palabra_2 = "anagrama"
 print (anagrama(palabra_1, palabra_2))
@@ -425,9 +434,9 @@ Caso de uso:
 7. Obtener información sobre el árbol. """
 
 class Arbol:
-    def __init__(self, tronco = 1, ramas = []):
+    def __init__(self, tronco = 1, ramas = None):
         self.tronco = tronco
-        self.ramas = ramas
+        self.ramas = ramas if ramas is not None else []
         
     def crecer_tronco(self):
         self.tronco += 1
@@ -499,7 +508,7 @@ class UsuarioBanco:
                 raise ValueError(f"{self.nombre} no tiene suficiente saldo para retirar {cantidad} unidades, tu saldo es de {self.saldo}")
             else:
                 self.saldo -= cantidad
-                print (f"{self.nombre} tu saldo ahora es de {self.saldo}")
+                print (f"{self.nombre}, tu saldo ahora es de {self.saldo}")
                 return True
         except ValueError as error:
             print (error)
@@ -510,10 +519,13 @@ class UsuarioBanco:
     def transferir_dinero(self, usuario_2, cantidad):
         if (self.retirar_dinero(cantidad) == True):
             usuario_2.agregar_dinero(cantidad)
+            print(f"El saldo de {self.nombre} ahora es de {self.saldo}")
+            print(f"El saldo de {usuario_2.nombre} ahora es de {usuario_2.saldo}")
         
         
     def agregar_dinero(self, cantidad_2):
         self.saldo += cantidad_2
+        print(f"El saldo de {self.nombre} ahora es de {self.saldo}")
 
 #1. Crear dos usuarios: "Alicia" con saldo inicial de 100 y "Bob" con saldo inicial de 50, ambos con cuenta corriente.
 Alicia = UsuarioBanco("Alicia", 100, True)    
@@ -650,28 +662,30 @@ except ValueError:
 import math
 
 def calcular_area(figura, datos):
-    if (figura.lower() == "rectangulo"):
-        base, altura = datos
-        area = base*altura
-        print (f"El area del rectangulo es: {area}")
-    elif (figura.lower() == "circulo"):
-        radio = datos
-        area = radio*radio*math.pi
-        print (f"El area del circulo es: {area}")
-    elif (figura.lower() == "triangulo"):
-        base, altura = datos
-        area = (base*altura)/2
-        print (f"El area del triangulo es: {area}")
-    else:
-        print ("No tenemos esta figura")
-    
+    try:
+        if (figura.lower() == "rectangulo"):
+            base, altura = datos
+            area = base*altura
+            print (f"El area del rectangulo es: {area}")
+        elif (figura.lower() == "circulo"):
+            (radio,) = datos
+            area = radio*radio*math.pi
+            print (f"El area del circulo es: {area}")
+        elif (figura.lower() == "triangulo"):
+            base, altura = datos
+            area = (base*altura)/2
+            print (f"El area del triangulo es: {area}")
+        else:
+            print ("No tenemos esta figura")
+    except ValueError:
+        print("¡Cuidado! La cantidad de datos no es la correcta")
+    except TypeError:
+        print("¡Cuidado! Los datos deben ser numéricos")
+        
 datos_rec = (6, 3)
-datos_cir = (5)
+datos_cir = (5,)
 datos_tri = (6, 4)
-try:
-    calcular_area("triangulo", datos_cir)
-except TypeError:
-    print ("¡Cuidado! Se han intoducido mas (o menos) datos de los que necesitas, para el triangulo y el rectangulo se necesitan base y altura, para el circulo solo el radio, repasalo.")
+calcular_area("circulo", datos_cir)
 
 # %%
 """41. En este ejercicio, se te pedirá que escribas un programa en Python que utilice condicionales para determinar el monto final de una compra en una tienda en línea,
